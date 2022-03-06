@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,6 +46,11 @@ public class BookController {
         return new ResponseEntity<>(bookService.saveBook(book), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{gId}")
+    public void deleteBook(@PathVariable String gId) {
+        bookService.deleteBook(gId);
+    }
+
     private Book getBookFromBookDTOForInventory(BookDTOForInventory bookDTOForInventory) {
         Book book = new Book();
         book.setgID(bookDTOForInventory.getgID());
@@ -61,7 +67,9 @@ public class BookController {
 
     private Set<Author> addAuthors(String[] authorsInString) {
         Set<Author> authors = new HashSet<>();
-        for(String authorInString : authorsInString) {
+        Set<String> authorsSet = new HashSet<>();
+        Collections.addAll(authorsSet, authorsInString);
+        for(String authorInString : authorsSet) {
             if(authorService.findByauthorName(authorInString) == null) {
                 Author author = new Author();
                 author.setAuthorName(authorInString);
